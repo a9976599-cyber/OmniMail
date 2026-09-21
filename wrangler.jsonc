@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "omni-mail",
-  "main": "src/index.ts", // 请根据实际入口文件调整
+  "main": "email-worker/src/index.ts",
   "compatibility_date": "2026-07-27",
   "compatibility_flags": ["nodejs_compat"],
   "usage_model": "standard",
@@ -13,7 +13,8 @@
     "binding": "AI"
   },
   "assets": {
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "directory": "dist"
   },
   "r2_buckets": [
     {
@@ -40,7 +41,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "omni-mail", // 请确认实际数据库名称
+      "database_name": "omni-mail",
       "database_id": "4730ff29-7913-4f10-947d-56fa1adb40b3"
     }
   ],
