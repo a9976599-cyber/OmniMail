@@ -1,49 +1,57 @@
-cat > wrangler.jsonc << 'EOF'
 {
-  "name": "cloud-mail",
-  "compatibility_date": "2025-06-04",
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "omni-mail",
+  "main": "src/index.ts", // 请根据实际入口文件调整
+  "compatibility_date": "2026-07-27",
+  "compatibility_flags": ["nodejs_compat"],
   "usage_model": "standard",
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
   },
-  "assets": {
-    "directory": "./assets"
+  "ai": {
+    "binding": "AI"
   },
+  "assets": {
+    "binding": "ASSETS"
+  },
+  "r2_buckets": [
+    {
+      "binding": "BACKUP_BUCKET",
+      "bucket_name": "omni-mail-backups"
+    },
+    {
+      "binding": "MAIL_BUCKET",
+      "bucket_name": "omni-mail"
+    }
+  ],
+  "workflows": [
+    {
+      "binding": "BACKUP_WORKFLOW",
+      "name": "omni-mail-backup",
+      "class_name": "OmniMailBackupWorkflow"
+    },
+    {
+      "binding": "CLEANUP_WORKFLOW",
+      "name": "omni-mail-cleanup",
+      "class_name": "OmniMailCleanupWorkflow"
+    }
+  ],
   "d1_databases": [
     {
-      "binding": "db",
-      "database_name": "db",
-      "database_id": "4ed7585d-df40-4857-a022-6f824cabae0a"
+      "binding": "DB",
+      "database_name": "omni-mail", // 请确认实际数据库名称
+      "database_id": "4730ff29-7913-4f10-947d-56fa1adb40b3"
     }
   ],
-  "kv_namespaces": [
+  "queues": [
     {
-      "binding": "kv",
-      "id": "d5cba4ba1a384333a2da1b8d314bfdc9"
+      "binding": "MAIL_QUEUE",
+      "queue_name": "omnimail-mail"
     }
-  ],
-  "ai": {
-    "binding": "ai"
-  },
-  "vars": {
-    "admin": "admin@qiczc.dpdns.org",
-    "domain": ["qiczc.dpdns.org"]
-  },
-  "routes": [
-    { "pattern": "qiczc.dpdns.org", "custom_domain": true },
-    { "pattern": "admin.qiczc.dpdns.org", "custom_domain": true }
   ]
+  // 以下 secret 绑定由 dashboard/CLI 管理，不需要写入 wrangler.jsonc:
+  // GMAIL_CREDENTIALS_KEY, ICLOUD_CREDENTIALS_KEY, MICROSOFT_CREDENTIALS_KEY,
+  // MICROSOFT_MAIL_ENABLED, NAVER_MAIL_CREDENTIALS_KEY, NAVER_MAIL_IMAP_ENABLED,
+  // QQ_MAIL_CREDENTIALS_KEY, QQ_MAIL_IMAP_ENABLED, SETUP_TOKEN, SUPER_ADMIN_EMAIL
 }
-EOF
-
-# 3. 设置 secret
-npx wrangler secret put jwt_secret
-
-# 4. 部署
-npx wrangler deploy
-
-# 5. 提交并推送
-git add wrangler.jsonc
-git commit -m "sync wrangler.jsonc with deployed configuration"
-git push
