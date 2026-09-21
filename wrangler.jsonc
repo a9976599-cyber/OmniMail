@@ -1,69 +1,37 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "omni-mail",
-  "main": "./email-worker/src/index.ts",
-  "compatibility_date": "2026-07-27",
-  "compatibility_flags": ["nodejs_compat"],
-  "keep_vars": true,
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api", "/api/*"]
-  },
-  "ai": {
-    "binding": "AI"
-  },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "migrations_dir": "migrations",
-      "migrations_table": "d1_migrations"
-    }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "MAIL_BUCKET"
-    },
-    {
-      "binding": "BACKUP_BUCKET",
-      "bucket_name": "omni-mail-backups"
-    }
-  ],
-  "workflows": [
-    {
-      "name": "omni-mail-backup",
-      "binding": "BACKUP_WORKFLOW",
-      "class_name": "OmniMailBackupWorkflow"
-    },
-    {
-      "name": "omni-mail-cleanup",
-      "binding": "CLEANUP_WORKFLOW",
-      "class_name": "OmniMailCleanupWorkflow"
-    }
-  ],
-  "queues": {
-    "producers": [
-      {
-        "binding": "MAIL_QUEUE",
-        "queue": "omnimail-mail"
-      }
-    ],
-    "consumers": [
-      {
-        "queue": "omnimail-mail",
-        "max_batch_size": 1,
-        "max_batch_timeout": 2,
-        "max_retries": 3,
-        "dead_letter_queue": "omnimail-mail-dead"
-      }
-    ]
-  },
-  "triggers": {
-    "crons": ["*/5 * * * *"]
-  },
+  "name": "cloud-mail",
+  "compatibility_date": "2025-06-04",
+  "usage_model": "standard",
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
-  }
+  },
+  "assets": {
+    "directory": "./assets"
+    // 如果您的静态资源在其他目录，请修改此处
+  },
+  "d1_databases": [
+    {
+      "binding": "db",
+      "database_name": "db",
+      "database_id": "4ed7585d-df40-4857-a022-6f824cabae0a"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "kv",
+      "id": "d5cba4ba1a384333a2da1b8d314bfdc9"
+    }
+  ],
+  "ai": {
+    "binding": "ai"
+  },
+  "vars": {
+    "admin": "admin@qiczc.dpdns.org",
+    "domain": ["qiczc.dpdns.org"]
+  },
+  "routes": [
+    { "pattern": "qiczc.dpdns.org", "custom_domain": true },
+    { "pattern": "admin.qiczc.dpdns.org", "custom_domain": true }
+  ]
 }
