@@ -1,3 +1,4 @@
+cat > wrangler.jsonc << 'EOF'
 {
   "name": "cloud-mail",
   "compatibility_date": "2025-06-04",
@@ -8,7 +9,6 @@
   },
   "assets": {
     "directory": "./assets"
-    // 如果您的静态资源在其他目录，请修改此处
   },
   "d1_databases": [
     {
@@ -35,3 +35,15 @@
     { "pattern": "admin.qiczc.dpdns.org", "custom_domain": true }
   ]
 }
+EOF
+
+# 3. 设置 secret
+npx wrangler secret put jwt_secret
+
+# 4. 部署
+npx wrangler deploy
+
+# 5. 提交并推送
+git add wrangler.jsonc
+git commit -m "sync wrangler.jsonc with deployed configuration"
+git push
