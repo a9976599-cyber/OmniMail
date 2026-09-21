@@ -44,12 +44,20 @@
       "database_id": "4730ff29-7913-4f10-947d-56fa1adb40b3"
     }
   ],
-  "queues": [
+  "queues": {
+  "producers": [
     {
       "binding": "MAIL_QUEUE",
-      "queue_name": "omnimail-mail"
+      "queue": "omnimail-mail"
+    }
+  ],
+  "consumers": [
+    {
+      "queue": "omnimail-mail"
     }
   ]
+}
+
   // 以下 secret 绑定由 dashboard/CLI 管理，不需要写入 wrangler.jsonc:
   // GMAIL_CREDENTIALS_KEY, ICLOUD_CREDENTIALS_KEY, MICROSOFT_CREDENTIALS_KEY,
   // MICROSOFT_MAIL_ENABLED, NAVER_MAIL_CREDENTIALS_KEY, NAVER_MAIL_IMAP_ENABLED,
