@@ -4,17 +4,32 @@
   "main": "email-worker/src/index.ts",
   "compatibility_date": "2026-07-27",
   "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
   "usage_model": "standard",
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
+  },
+  "routes": [
+    {
+      "pattern": "*.qiczc.dpdns.org",
+      "zone_name": "qiczc.dpdns.org"
+    },
+    {
+      "pattern": "*.qiczc.dpdns.org/*",
+      "zone_name": "qiczc.dpdns.org"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/5 * * * *"]
   },
   "ai": {
     "binding": "AI"
   },
   "assets": {
     "binding": "ASSETS",
-    "directory": "dist"
+    "directory": "dist",
+    "not_found_handling": "single-page-application"
   },
   "r2_buckets": [
     {
@@ -41,7 +56,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "omni-mail",
+      "database_name": "omni-mail", // 请确认实际数据库名称
       "database_id": "4730ff29-7913-4f10-947d-56fa1adb40b3"
     }
   ],
